@@ -8,7 +8,7 @@
 * Store information - who crossed rates, what is the rate information
 
 ### Entities
-* Client:
+* Client
 * API Request
 * RateLimitManager
 * RateLimitInfo
@@ -30,7 +30,6 @@
     class APIRequest {
             apiUri: string
             client: Client
-            makeRequest()
     }
     class RateLimitStrategy {
         executeStrategy()
@@ -78,5 +77,25 @@
     RateLimiter  o--RateLimiterResponse
 ```
 ### Identify Design Pattern from Entities-Relationships
-### DB Schema 
+* **Strategy Pattern:-** This pattern allows the `RateLimitManager` to use different rate-limiting strategies interchangeably.
+* **Repository Pattern:-** This pattern used to create `Dao` for the DB related operations. 
+### DB Schema
+#### RateLimiter table
+
+```json
+{
+  "id" : "12345",
+  "api":  "http://URI",
+  "client": {
+    "clientId" : "clientId1",
+    "IpAddress" : "xxxx.xxxx.xxxx.xxxx",
+    "Apikey":  "ff123kl#1",
+    "CountryCode" : "UK"
+  },
+  "rate" : "80",
+  "status" : "STOPPED",
+  "timestamp": "time"
+}
+```
+
 ### Interface-level Coding
