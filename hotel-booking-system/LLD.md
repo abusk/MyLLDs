@@ -77,6 +77,16 @@ class SearchRequest {
 class SearchService { 
         search(SearchRequest)
 }
+class SearchByLocation {
+    search(SearchRequest)
+}
+class SearchByHotelType {
+    search(SearchRequest)
+}
+class StorageService {
+        save()
+        load()
+    }
 class BookingRequest { 
         hotel: string
         roomType: string
@@ -112,12 +122,15 @@ class  BookingHistory {
         seeHistory()
 }
 
+
         HotelAdminService <-- Admin
         Hotel o-- Manager
         Hotel o-- Room
         HotelAdminService  <-- Hotel
-        SearchRequest o-- Customer
         SearchService <-- SearchRequest
+        SearchService o-- SearchByLocation
+        SearchService o-- SearchByHotelType 
+        SearchService <-- StorageService
         BookingRequest o-- Customer
         BookingRequest o-- Hotel
         HotelBookingService <-- BookingRequest
@@ -125,8 +138,14 @@ class  BookingHistory {
         HotelBookingService --> PaymentService
         HotelBookingService --> ReviewService 
         HotelBookingService -->  BookingHistory 
+        HotelBookingService --> StorageService 
 
 ```
 ### Identify Design Pattern from Entities-Relationships
+* **Factory Method Pattern:** The `Hotel` and `Room` classes can have multiple types, and they are created when the addRoom and addHotel methods are called. The factory method cn be use for creating instances of these classes.
+* **Strategy Pattern:** The search for hotels can be by different type of parameters like Hotel location, Hotel Type, Room Type, Room Capacity or Price range. We can use Strategy pattern for different search strategy used in Search service.
+* **Facade Pattern:** The `HotelBookingService` is  
+* **Singleton Pattern:**
+* **Repository Pattern:**
 ### DB Schema
 ### Interface-level Coding
