@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+allprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'project-report'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
+    }
+
+    group = 'org.myllds' // Example group configuration for all projects
+    version = '1.0.0'     // Example version configuration for all projects
+
+    repositories {
+        mavenCentral() // Example repository configuration for all projects
+    }
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok:1.18.30'
+        annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    }
+}

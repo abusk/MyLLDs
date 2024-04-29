@@ -27,6 +27,16 @@
 ### Entity-Relationships
 ```mermaid
 classDiagram
+class SearchByPrice {
+    search(SearchRequest)
+}
+class SearchHotel {
+    search(SearchRequest)
+}
+class SearchByLocation {
+    search(SearchRequest)
+}
+
 class Admin {
         id: string
         name: string
@@ -45,21 +55,15 @@ class Hotel {
         manager: Manager
         contactInfo: string
         amenities: strings
-        getAvailableRooms(dateRange)
 }
 class Room {
         roomNumber: string
         type: string
         price: double
         capacity: int
-        isAvailable(dateRange)
+        status: boolean
 }
-class HotelAdminService {
-        addHotel(Hotel)
-        addRooms(Rooms)
-        blockRoom(Hotel, Room)
-        offBoardHotel(Hotel)
-}
+
 class Customer {
         id: string
         name: string
@@ -77,16 +81,13 @@ class SearchRequest {
 class SearchService { 
         search(SearchRequest)
 }
-class SearchByLocation {
-    search(SearchRequest)
+class HotelAdminService {
+    addHotel(Hotel)
+    addRooms(Rooms)
+    blockRoom(Hotel, Room)
+    offBoardHotel(Hotel)
 }
-class SearchByHotelType {
-    search(SearchRequest)
-}
-class StorageService {
-        save()
-        load()
-    }
+
 class BookingRequest { 
         hotel: string
         roomType: string
@@ -104,12 +105,11 @@ class BookingDetails {
 class HotelBookingService {
         paymentService: PaymentService  
         reviewService: ReviewService
-        bookingHistory: BookingHistory
+        repositoryService: RepositoryService 
         bookHotel(BookingRequest)
         payment()
         cancelBooking(bokkingId)
         checkout(bookingId)
-        checkHistory()
 } 
 class PaymentService {
         pay(amount)
@@ -118,34 +118,71 @@ class ReviewService {
         rate()
         comment()
 }
-class  BookingHistory {
-        seeHistory()
+
+class RepositoryService {
+    getAvailableRooms(hotelId, daterange)
 }
 
-
-        HotelAdminService <-- Admin
+        SearchHotel <|-- SearchByPrice
+        SearchHotel <|-- SearchByLocation
+        SearchRequest --> SearchService
+        SearchService <-- SearchHotel
+        Admin .. HotelAdminService
         Hotel o-- Manager
         Hotel o-- Room
-        HotelAdminService  <-- Hotel
-        SearchService <-- SearchRequest
-        SearchService o-- SearchByLocation
-        SearchService o-- SearchByHotelType 
-        SearchService <-- StorageService
-        BookingRequest o-- Customer
-        BookingRequest o-- Hotel
+        HotelAdminService  --> RepositoryService
+        BookingDetails o-- Customer
+        BookingDetails o-- Hotel
         HotelBookingService <-- BookingRequest
         HotelBookingService o-- BookingDetails
         HotelBookingService --> PaymentService
-        HotelBookingService --> ReviewService 
-        HotelBookingService -->  BookingHistory 
-        HotelBookingService --> StorageService 
+        HotelBookingService --> ReviewService
+        HotelBookingService --> RepositoryService
+        SearchService <-- RepositoryService
 
 ```
 ### Identify Design Pattern from Entities-Relationships
 * **Factory Method Pattern:** The `Hotel` and `Room` classes can have multiple types, and they are created when the addRoom and addHotel methods are called. The factory method cn be use for creating instances of these classes.
 * **Strategy Pattern:** The search for hotels can be by different type of parameters like Hotel location, Hotel Type, Room Type, Room Capacity or Price range. We can use Strategy pattern for different search strategy used in Search service.
-* **Facade Pattern:** The `HotelBookingService` is  
-* **Singleton Pattern:**
-* **Repository Pattern:**
+* **Facade Pattern:** The `HotelBookingService` follows the Facade pattern, where it provides a unified interface to interact with different subsystems or interfaces within the hotel booking system
+* **Singleton Pattern:** All the service class can be Singleton.
+* **Repository Pattern:** The `RepositoryService` interacts with storage system which follows repository pattern. 
 ### DB Schema
+#### HotelInfo table
+```json
+{
+  "id" : "h1",
+  "location": "l1",
+  "name" : "string",
+  "type" : "s star",
+  "rooms": ["r1", "r2"],
+  "manager": "m1",
+  "contact" : "contactInfo",
+  "amenities": ["a1", "a2"]
+}
+```
+#### RoomInfo table
+```json
+{
+  "id" : "r1",
+  "type": "ty1",
+  "capacity" : 3,
+  "price" : 1111.00,
+  "status": "active"
+}
+```
+#### Bookings Table
+```json
+{
+  "id": "b1",
+  "hotelId": "h1",
+  "roomIds" : ["r1", "r2"],
+  "startDate": "date1",
+  "endDate": "date2",
+  "totalPrice" : 23445.00,
+  "customerId": "custId",
+  "guestIds": ["g1", "g2"]
+}
+```
+
 ### Interface-level Coding
