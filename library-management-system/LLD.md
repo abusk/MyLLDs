@@ -22,13 +22,14 @@ Design a library management system where-
 * The System can scan barcode of book and member id
 
 ### Entities(Needed Classes)
-* Library
 * Member
+* Book
+* Library
+* Manager
 * SearchRequest
 * SearchService
 * SearchStrategy
-* Book
-* Manager
+* SearchStrategyFactory
 * BookHoldingService
 * BookHoldings
 * BookHoldingRequest
@@ -36,6 +37,7 @@ Design a library management system where-
 * ReservationService
 * Reservation
 * ReservationRequest
+* NotificationService
 * RepositoryService
 
 ### Entities-Relationships
