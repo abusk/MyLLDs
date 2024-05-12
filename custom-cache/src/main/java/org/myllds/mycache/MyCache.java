@@ -1,7 +1,9 @@
 package org.myllds.mycache;
 
 import org.myllds.mycache.evictionpolicy.EvictionPolicy;
+import org.myllds.mycache.exception.MyCacheInsertException;
 import org.myllds.mycache.exception.MyCacheMissException;
+import org.myllds.mycache.exception.MyCacheStorageException;
 import org.myllds.mycache.factory.EvictionPolicyFactory;
 import org.myllds.mycache.evictionpolicy.MyCacheEvictionPolicy;
 import org.myllds.mycache.storage.CacheRecord;
@@ -18,15 +20,21 @@ public class MyCache<K, T> {
         EvictionPolicyFactory<K, T> factory = new EvictionPolicyFactory<>();
         myCacheEvictionPolicy = factory.getEvictionPolicy(cacheStorage, EvictionPolicy.LRU);
     }
-    public MyCache(int size) {
+    public MyCache(int size) throws MyCacheStorageException {
         this.size = size;
+        if (size <= 0) {
+            throw new MyCacheStorageException("Cache capacity should not be <= 0");
+        }
         cacheStorage = new CacheStorage<>(this.size);
         EvictionPolicyFactory<K, T> factory = new EvictionPolicyFactory<>();
         myCacheEvictionPolicy = factory.getEvictionPolicy(cacheStorage, EvictionPolicy.LRU);
     }
 
-    public MyCache(int size, EvictionPolicy evictionPolicy) {
+    public MyCache(int size, EvictionPolicy evictionPolicy) throws MyCacheStorageException {
         this.size = size;
+        if (size <= 0) {
+            throw new MyCacheStorageException("Cache capacity should not be <= 0");
+        }
         cacheStorage = new CacheStorage<>(this.size);
         EvictionPolicyFactory<K, T> factory = new EvictionPolicyFactory<>();
         myCacheEvictionPolicy = factory.getEvictionPolicy(cacheStorage,evictionPolicy);
@@ -38,11 +46,14 @@ public class MyCache<K, T> {
         myCacheEvictionPolicy = factory.getEvictionPolicy(cacheStorage,evictionPolicy);
     }
 
-    public void setCacheSize(int size) {
+    public void setCacheSize(int size) throws MyCacheStorageException {
+        if (size <= 0) {
+            throw new MyCacheStorageException("Cache capacity should not be <= 0");
+        }
         this.size = size;
     }
 
-    public void put(K key, T item) {
+    public void put(K key, T item) throws MyCacheInsertException {
         int count = 1;
         if(cacheStorage.ifItemExists(key)) {
             count += cacheStorage.getItem(key).getFrequency();
@@ -54,7 +65,7 @@ public class MyCache<K, T> {
     public T fetch(K key) throws MyCacheMissException {
         CacheRecord<K, T> fetch = myCacheEvictionPolicy.fetch(key);
         if(fetch == null) {
-            throw new MyCacheMissException();
+            throw new MyCacheMissException("Cache Miss: Item:" +key+ " not found in cache:");
         }
         return fetch.getValue();
     }

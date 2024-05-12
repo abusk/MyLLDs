@@ -2,6 +2,7 @@ package org.myllds.mycache.evictionpolicy;
 
 import org.myllds.mycache.evictionpolicy.structure.DoubleLinkedList;
 import org.myllds.mycache.evictionpolicy.structure.Node;
+import org.myllds.mycache.exception.MyCacheInsertException;
 import org.myllds.mycache.storage.CacheRecord;
 import org.myllds.mycache.storage.CacheStorage;
 
@@ -27,19 +28,24 @@ public class LRU<K, T> implements MyCacheEvictionPolicy<K, T>{
     }
 
     @Override
-    public void put(CacheRecord<K, T> cacheRecord, int capacity) {
-        if(lruMap.containsKey(cacheRecord.getKey())) {
-            Node<K> nodeToUpdate = lruMap.get(cacheRecord.getKey());
-            dll.remove(nodeToUpdate);
-        } else if (cacheStorage.getSize() >= capacity) {
-            Node<K> kNode = dll.removeFirst();
-            lruMap.remove(kNode.key);
-            cacheStorage.removeItem(kNode.key);
+    public void put(CacheRecord<K, T> cacheRecord, int capacity) throws MyCacheInsertException {
+        try {
+            if (lruMap.containsKey(cacheRecord.getKey())) {
+                Node<K> nodeToUpdate = lruMap.get(cacheRecord.getKey());
+                dll.remove(nodeToUpdate);
+            } else if (cacheStorage.getSize() >= capacity) {
+                Node<K> kNode = dll.removeFirst();
+                lruMap.remove(kNode.key);
+                cacheStorage.removeItem(kNode.key);
+                System.out.println("Item evicted due to cache overload is:" + kNode.key);
+            }
+            Node<K> newNode = new Node<>(cacheRecord.getKey());
+            Node<K> kNode = dll.addLast(newNode);
+            lruMap.put(cacheRecord.getKey(), kNode);
+            cacheStorage.addItem(cacheRecord);
+        } catch (Exception e) {
+            throw new MyCacheInsertException("Not Able to Insert to cache.", e);
         }
-        Node<K> newNode = new Node<>(cacheRecord.getKey());
-        Node<K> kNode = dll.addLast(newNode);
-        lruMap.put(cacheRecord.getKey(), kNode);
-        cacheStorage.addItem(cacheRecord);
     }
 
     @Override

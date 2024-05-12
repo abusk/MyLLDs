@@ -1,17 +1,22 @@
 package org.myllds.mycache.evictionpolicy.structure;
 
+import org.myllds.mycache.exception.DLLException;
+
 public class DoubleLinkedList<K> {
     Node<K> head;
     Node<K> tail;
 
-    public Node<K> removeFirst() {
+    public synchronized Node<K> removeFirst() {
         Node<K> currentHead = head;
         head = head.next;
         head.prev = null;
         return currentHead;
     }
 
-    public void remove(Node<K> node) {
+    public synchronized void remove(Node<K> node) throws DLLException {
+        if (node == null) {
+            throw new DLLException("Node to remove can't be NULL. ");
+        }
         if(node == head) {
             head = head.next;
             head.prev = null;
@@ -24,7 +29,7 @@ public class DoubleLinkedList<K> {
         }
     }
 
-    public Node<K> addLast(Node<K> node) {
+    public synchronized Node<K> addLast(Node<K> node) {
         if(head == null) {
             head = node;
             node.prev = null;
