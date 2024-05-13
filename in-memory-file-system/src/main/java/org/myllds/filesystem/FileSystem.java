@@ -20,7 +20,7 @@ public class FileSystem {
         FileNode next = root;
         String[] files = path.trim().split("/");
         if(files.length == 0) {
-            return new ArrayList<>();
+            return new ArrayList<>(root.getSubDirectories().keySet());
         }
         for (int i = 1; i< files.length; i++) {
             next = next.getSubDirectories().get(files[i]);
