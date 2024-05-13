@@ -45,4 +45,6 @@ UUIDGeneratorService o-- UIIDGeneratorExecutor
 UIIDGeneratorExecutor o-- UUIDGenerateTask 
 ```
 
+There are multiple servers running as per the load, `Zookeeper` will mange the server.
+
 
