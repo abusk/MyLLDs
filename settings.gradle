@@ -3,4 +3,6 @@ include 'api-rate-limiter'
 include 'hotel-booking-system'
 include 'library-management-system'
 include 'custom-cache'
+include 'wether-service'
+include 'in-memory-file-system'
 
