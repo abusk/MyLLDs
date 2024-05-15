@@ -53,6 +53,7 @@ class PostService {
 PostService --> Post
 PostService o-- PostRepo
 NewsFeedRepo --> PostRepo
+NewsFeedRepo --> FollowRepo 
 PostRepo --> FollowRepo 
 NewsFeedService o-- NewsFeedRepo
 FollowService o-- FollowRepo
