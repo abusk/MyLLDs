@@ -2,7 +2,6 @@ package org.myllds.wether.service;
 
 import org.myllds.wether.model.WeatherData;
 import org.myllds.wether.subject.Observer;
-import org.myllds.wether.subject.Subject;
 
 import java.util.ArrayList;
 import java.util.List;

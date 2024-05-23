@@ -1,4 +1,6 @@
-package org.myllds.wether.subject;
+package org.myllds.wether.service;
+
+import org.myllds.wether.subject.Observer;
 
 public interface Subject {
     void registerObserver(Observer observer);

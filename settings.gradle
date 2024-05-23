@@ -10,4 +10,6 @@ include 'todo-trello'
 include 'ride-sharing'
 include 'facebook-subsystem'
 include 'splitwise'
+include 'movie-ticket-booking'
+include 'stock-alert-system'
 
