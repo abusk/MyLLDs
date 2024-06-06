@@ -1,6 +1,7 @@
 package org.vfs.service.impl;
 
 import org.vfs.constants.Constants;
+import org.vfs.exception.FileLockedException;
 import org.vfs.exception.FileNotExistsException;
 import org.vfs.exception.FileSizeLimitException;
 import org.vfs.model.INode;
@@ -19,6 +20,9 @@ public class FileSystemServiceImpl implements FileSystemService {
     @Override
     public INode fOpen(String fileName) {
         INode inode = fileRepository.getInode(fileName);
+        if(inode.getFileLock().isLock()) {
+            throw new FileLockedException("File is Locked now!");
+        }
         if (inode == null) {
             VFile vFile = new VFile(Constants.V_FILE_SIZE);
             VFileLock fileLock = new VFileLock(true);
