@@ -20,15 +20,15 @@ public class FileSystemServiceImpl implements FileSystemService {
     @Override
     public INode fOpen(String fileName) {
         INode inode = fileRepository.getInode(fileName);
-        if(inode.getFileLock().isLock()) {
-            throw new FileLockedException("File is Locked now!");
-        }
         if (inode == null) {
             VFile vFile = new VFile(Constants.V_FILE_SIZE);
             VFileLock fileLock = new VFileLock(true);
             INode iNode = new INode(fileName, vFile, fileLock);
             fileRepository.addFileNode(fileName, iNode);
         } else {
+            if(inode.getFileLock().isLock()) {
+                throw new FileLockedException("File is Locked now!");
+            }
             inode.setFileLock(new VFileLock(true));
             VFile vFile = inode.getvFile();
             inode.setvFile(vFile);
