@@ -16,6 +16,93 @@
 * Schema
 * Index
 ### Entity-Relationships
+```mermaid
+classDiagram
+class User {
+        userName: string,
+        password: string
+}
+class Database {
+        name: string,
+        tables: list
+        createTable()
+        deleteTable()
+}
+class DataType {
+        type: string
+        validate()
+} 
+class IntType {
+        minValue:
+        maxvalue
+        validate()
+}
+class StringType {
+        length:
+        validate()
+}
+class DataValidationType {
+        type:
+        validate()
+}
+class NonNull {
+        validate()
+}
+class Range {
+        minvalue:
+        maxValue:
+        validate()
+}
+class Schema {
+        name: string
+        columns: list
+        validateRow()
+} 
+class Column {
+        name: string
+        type: DataType
+        validataTye: DataValidationType
+        validate()
+}
+class Table {
+        name:
+        data: list
+        schema: Schema
+        indexes: Index
+        primarKey: DataType
+        
+        insert()
+        delete(filters)
+        createIndex()
+        deleteIndex()
+        scan(filters)
+        scanOnIndex(filters)
+}
+class Index {
+        name: string
+        primaryKey:
+        indexData:
+        insertData()
+        removeData()
+        getData(filter)
+}
 
+class FuzzyIndex {
+        separator:
+        getData();
+}
+    Database -- User
+    Table --* Database
+    Schema --* Table
+    Index --* Table
+    Column --* Schema
+    Column *-- DataType
+    DataType <|-- IntType
+    DataType <|-- StringType
+    Column  *-- DataValidationType
+    DataValidationType <|-- NonNull
+    DataValidationType <|-- Range
+    Index <|-- FuzzyIndex
+```
 ### Identify Design Pattern from Entities-Relationships
 
