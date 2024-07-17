@@ -45,9 +45,7 @@ class DataValidationType {
         type:
         validate()
 }
-class NonNull {
-        validate()
-}
+
 class Range {
         minvalue:
         maxValue:
@@ -57,7 +55,13 @@ class Schema {
         name: string
         columns: list
         validateRow()
-} 
+}
+class NonNull {
+        validate() 
+}
+class Required {
+        validate()
+}
 class Column {
         name: string
         type: DataType
@@ -78,6 +82,7 @@ class Table {
         scan(filters)
         scanOnIndex(filters)
 }
+
 class Index {
         name: string
         primaryKey:
@@ -97,11 +102,12 @@ class FuzzyIndex {
     Index --* Table
     Column --* Schema
     Column *-- DataType
+    DataType <|-- Range
     DataType <|-- IntType
     DataType <|-- StringType
     Column  *-- DataValidationType
     DataValidationType <|-- NonNull
-    DataValidationType <|-- Range
+    DataValidationType <|-- Required
     Index <|-- FuzzyIndex
 ```
 ### Identify Design Pattern from Entities-Relationships
